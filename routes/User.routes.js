@@ -1,20 +1,18 @@
 const express = require("express")
-const bcrypt  = require("bcrypt")
+const bcrypt = require("bcrypt")
 var jwt = require('jsonwebtoken');
-
 const UserModel = require("../modals/User")
-
 const userController = express.Router();
 
 userController.post("/register", (req, res) => {
-    const {email, password} = req.body;
-    bcrypt.hash(password, 6, async function(err, hash) {
-        if(err){
+    const { email, password } = req.body;
+    bcrypt.hash(password, 6, async function (err, hash) {
+        if (err) {
             res.send("please try again")
         }
         const user = new UserModel({
             email,
-            password : hash
+            password: hash
         })
         await user.save();
         res.send("Sign up is successfull")
@@ -22,20 +20,20 @@ userController.post("/register", (req, res) => {
 })
 
 userController.post("/login", async (req, res) => {
-    const {email, password} = req.body;
-    const user = await UserModel.findOne({email})
+    const { email, password } = req.body;
+    const user = await UserModel.findOne({ email })
     console.log(user)
-    if(!user){
+    if (!user) {
         return res.send("Invalid Credentials")
     }
     const hash = user.password;
     const userId = user._id
-    bcrypt.compare(password, hash, function(err, result) {
-        if(result){
-            var token = jwt.sign({email,userId}, 'secret');
-            return res.send({"message":"login success", "token" : token})
+    bcrypt.compare(password, hash, function (err, result) {
+        if (result) {
+            var token = jwt.sign({ email, userId }, 'secret');
+            return res.send({ "message": "login success", "token": token })
         }
-        else{
+        else {
             return res.send("Invalid credentials")
         }
     });

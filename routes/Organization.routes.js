@@ -1,7 +1,5 @@
 const express = require("express");
-
 const OrganizationModel = require("../modals/Organization");
-
 const organizationController = express.Router();
 
 organizationController.post("/create", async (req, res) => {
@@ -13,15 +11,13 @@ organizationController.post("/create", async (req, res) => {
     userId,
   });
   await new_organization.save();
-  res.send({ message: "Organization Done ", new_organization });
+  res.send({message: "Organization Sucess ", new_organization });
 });
 
 organizationController.get("/", async (req, res) => {
-  const { userId } = req.body;
-  const Data = await OrganizationModel.find({ userId });
+  const {userId} = req.body;
+  const Data = await OrganizationModel.find({userId});
   res.send(Data);
 });
-
-
 
 module.exports = organizationController;
